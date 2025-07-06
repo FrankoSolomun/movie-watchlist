@@ -33,9 +33,9 @@ export default function SearchPage() {
   const [addingMovies, setAddingMovies] = useState<Set<number>>(new Set())
   const [watchlistMovies, setWatchlistMovies] = useState<Set<number>>(new Set())
   const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [totalPages, setTotalPages] = useState(1) // eslint-disable-line @typescript-eslint/no-unused-vars
   const [hasMore, setHasMore] = useState(true)
-  const [addedMovies, setAddedMovies] = useState<Set<number>>(new Set())
+  const [addedMovies, setAddedMovies] = useState<Set<number>>(new Set()) // eslint-disable-line @typescript-eslint/no-unused-vars
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
@@ -45,6 +45,7 @@ export default function SearchPage() {
 
     try {
       const response = await fetch('/api/watchlist')
+
       if (!response.ok) return
 
       const data = await response.json()
