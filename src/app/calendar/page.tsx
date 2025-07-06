@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSession } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -23,7 +23,7 @@ interface WatchlistMovie {
   createdAt: number
 }
 
-export default function CalendarPage() {
+function CalendarPageContent() {
   const { data: session } = useSession()
   const searchParams = useSearchParams()
   const dateParam = searchParams.get('date')
@@ -1150,5 +1150,13 @@ export default function CalendarPage() {
           })()}
       </div>
     </div>
+  )
+}
+
+export default function CalendarPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+      <CalendarPageContent />
+    </Suspense>
   )
 }
