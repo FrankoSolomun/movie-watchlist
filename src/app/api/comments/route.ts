@@ -48,14 +48,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    console.log('Session user:', session?.user)
 
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const { movieId, content } = await request.json()
-    console.log('Request data:', { movieId, content })
 
     if (!movieId || !content) {
       return NextResponse.json(
@@ -89,8 +87,6 @@ export async function POST(request: NextRequest) {
       createdAt: now,
       updatedAt: now,
     }
-
-    console.log('Insert data:', insertData)
 
     try {
       const result = await db.insert(comments).values(insertData)
