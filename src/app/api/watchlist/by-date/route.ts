@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { watchlist } from '@/lib/schema'
 import { eq, and, isNotNull } from 'drizzle-orm'
@@ -8,7 +8,7 @@ import { eq, and, isNotNull } from 'drizzle-orm'
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: 'Authentication required' },
@@ -28,8 +28,12 @@ export async function GET(request: NextRequest) {
 
     // Parse the date and get start/end of day in milliseconds
     const targetDate = new Date(date)
-    const startOfDay = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate()).getTime()
-    const endOfDay = startOfDay + (24 * 60 * 60 * 1000) - 1
+    const startOfDay = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      targetDate.getDate()
+    ).getTime()
+    const endOfDay = startOfDay + 24 * 60 * 60 * 1000 - 1
 
     // Fetch movies watched on the specific date
     const movies = await db
@@ -46,13 +50,16 @@ export async function GET(request: NextRequest) {
     // Filter by date in JavaScript since we need date range comparison
     const moviesOnDate = movies.filter(movie => {
       if (!movie.dateWatched) return false
-      const watchedTime = typeof movie.dateWatched === 'number' ? movie.dateWatched : new Date(movie.dateWatched).getTime()
+      const watchedTime =
+        typeof movie.dateWatched === 'number'
+          ? movie.dateWatched
+          : new Date(movie.dateWatched).getTime()
       return watchedTime >= startOfDay && watchedTime <= endOfDay
     })
 
     return NextResponse.json({
       movies: moviesOnDate,
-      date: date
+      date: date,
     })
   } catch (error) {
     console.error('Error fetching movies by date:', error)

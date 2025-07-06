@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from '../../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { watchlist } from '@/lib/schema'
 import { eq, and } from 'drizzle-orm'
@@ -65,10 +65,10 @@ export async function POST(request: NextRequest) {
         )
       )
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       message: 'Movie scheduled successfully',
-      scheduledDate: scheduledDateTime.toISOString()
+      scheduledDate: scheduledDateTime.toISOString(),
     })
   } catch (error) {
     console.error('Error scheduling movie:', error)

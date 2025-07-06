@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { watchlist } from '@/lib/schema'
 import { eq, and } from 'drizzle-orm'
@@ -21,9 +21,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (rating !== null && (rating < 1 || rating > 5 || !Number.isInteger(rating))) {
+    if (
+      rating !== null &&
+      (rating < 1 || rating > 5 || !Number.isInteger(rating))
+    ) {
       return NextResponse.json(
-        { error: 'Rating must be an integer between 1 and 5, or null to remove rating' },
+        {
+          error:
+            'Rating must be an integer between 1 and 5, or null to remove rating',
+        },
         { status: 400 }
       )
     }
