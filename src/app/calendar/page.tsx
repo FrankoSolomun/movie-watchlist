@@ -720,12 +720,12 @@ function CalendarPageContent() {
           <Card>
             <CardHeader className="pb-2 sm:pb-6">
               <CardTitle className="text-base sm:text-lg">
-                Movies Watched
+                Movies on This Date
               </CardTitle>
               {selectedDate && selectedDateMovies.length > 0 && (
                 <p className="text-xs text-muted-foreground">
                   {selectedDateMovies.length} movie
-                  {selectedDateMovies.length !== 1 ? 's' : ''} watched on{' '}
+                  {selectedDateMovies.length !== 1 ? 's' : ''} on{' '}
                   {selectedDate.toLocaleDateString()}
                 </p>
               )}
@@ -758,7 +758,15 @@ function CalendarPageContent() {
                             : 'N/A'}
                         </p>
                         <p className="text-xs font-medium text-blue-600">
-                          Watched{' '}
+                          {(() => {
+                            const today = new Date()
+                            today.setHours(0, 0, 0, 0)
+                            const movieDate = new Date(movie.dateWatched!)
+                            movieDate.setHours(0, 0, 0, 0)
+                            const isUpcoming = movieDate > today
+                            
+                            return isUpcoming ? 'Upcoming' : 'Watched'
+                          })()}{' '}
                           {movie.dateWatched
                             ? new Date(movie.dateWatched!).toLocaleDateString()
                             : ''}
@@ -786,13 +794,13 @@ function CalendarPageContent() {
                   <CalendarDays className="mx-auto mb-2 h-6 w-6 text-muted-foreground sm:h-8 sm:w-8" />
                   <p className="mb-1 text-xs leading-tight text-muted-foreground sm:text-sm">
                     {selectedDate
-                      ? 'No movies watched on this date'
-                      : 'Select a date to see watched movies'}
+                      ? 'No movies scheduled for this date'
+                      : 'Select a date to see movies'}
                   </p>
                   {selectedDate && watchedDates.size > 0 && (
                     <p className="text-xs leading-tight text-muted-foreground">
                       Try selecting a highlighted date (blue background) to see
-                      watched movies
+                      movies
                     </p>
                   )}
                 </div>
