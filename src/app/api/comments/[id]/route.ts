@@ -8,10 +8,10 @@ import { eq, and } from 'drizzle-orm'
 // PUT /api/comments/[id]
 export async function PUT(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -44,7 +44,7 @@ export async function PUT(
     const existingComment = await db
       .select()
       .from(comments)
-      .where(and(eq(comments.id, params.id), eq(comments.userId, session.user.id)))
+      .where(and(eq(comments.id, id), eq(comments.userId, session.user.id)))
       .limit(1)
 
     if (existingComment.length === 0) {
@@ -61,7 +61,7 @@ export async function PUT(
         content: content.trim(),
         updatedAt: new Date(),
       })
-      .where(eq(comments.id, params.id))
+      .where(eq(comments.id, id))
 
     // Fetch the updated comment with user info
     const updatedComment = await db
@@ -76,7 +76,7 @@ export async function PUT(
       })
       .from(comments)
       .leftJoin(users, eq(comments.userId, users.id))
-      .where(eq(comments.id, params.id))
+      .where(eq(comments.id, id))
       .limit(1)
 
     return NextResponse.json({ comment: updatedComment[0] })
@@ -92,10 +92,10 @@ export async function PUT(
 // DELETE /api/comments/[id]
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context
+    const { id } = await params
     const session = await getServerSession(authOptions)
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -105,7 +105,7 @@ export async function DELETE(
     const existingComment = await db
       .select()
       .from(comments)
-      .where(and(eq(comments.id, params.id), eq(comments.userId, session.user.id)))
+      .where(and(eq(comments.id, id), eq(comments.userId, session.user.id)))
       .limit(1)
 
     if (existingComment.length === 0) {
@@ -116,7 +116,7 @@ export async function DELETE(
     }
 
     // Delete the comment
-    await db.delete(comments).where(eq(comments.id, params.id))
+    await db.delete(comments).where(eq(comments.id, id))
 
     return NextResponse.json({ message: 'Comment deleted successfully' })
   } catch (error) {
