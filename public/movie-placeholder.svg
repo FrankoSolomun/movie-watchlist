@@ -1,0 +1,7 @@
+<svg width="300" height="450" viewBox="0 0 300 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="450" rx="8" fill="#f1f5f9"/>
+  <rect x="60" y="160" width="180" height="130" rx="8" fill="#e2e8f0"/>
+  <circle cx="150" cy="205" r="20" fill="#64748b"/>
+  <path d="M140 200 L160 215 L140 230 Z" fill="#f1f5f9"/>
+  <text x="150" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" text-anchor="middle" fill="#64748b">No Image Available</text>
+</svg>
